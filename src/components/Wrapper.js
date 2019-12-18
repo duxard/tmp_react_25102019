@@ -1,12 +1,79 @@
 import React from 'react';
+import axios from 'axios';
+import './styles/wrapper.css';
 
-const Wrapper = () => {
-  return (
-    <div>
-       <h3>Home page</h3>
-       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem doloribus non aut repellendus sequi distinctio sit exercitationem tempore, autem atque vero. Praesentium animi, nihil architecto velit. Vitae in temporibus recusandae qui architecto quidem fugiat non placeat quod nisi. Ad provident explicabo in esse! Aut eius ipsam inventore ipsum sed quae nesciunt autem, eveniet, veniam corporis totam, deleniti quasi? Consectetur quod dolores iure maiores exercitationem soluta modi, necessitatibus delectus itaque nemo rerum, vero ad vel odio quam, laborum fuga minima odit minus! Iure animi nisi iusto illum totam, dolores natus est explicabo reiciendis omnis aliquid suscipit ad, modi dolor inventore commodi ea cum odit. Animi, maxime saepe labore corrupti enim, itaque quo atque aliquid magnam, natus minima impedit et! Ipsum ipsa vel voluptas! Accusantium reiciendis magni dolor sed, quo impedit. Distinctio inventore in beatae exercitationem earum harum error maiores nam, sapiente fugit eius ex vero suscipit. Ut at maxime delectus quo totam rem, reprehenderit et earum ducimus repellendus. Quaerat animi eum ut obcaecati amet blanditiis reiciendis, doloribus quod itaque id doloremque, modi vero veritatis commodi distinctio ab quia laudantium consectetur, ipsum pariatur ducimus eligendi. Nisi veritatis possimus molestiae eos voluptatum voluptas dolores error sunt numquam! Officiis, inventore distinctio alias commodi optio vero nihil, architecto minima, nam non saepe ut deserunt fugit minus, illum quidem deleniti magni! Laboriosam ad nostrum sequi a sint qui, eius beatae quam inventore similique velit non repudiandae architecto distinctio tenetur doloribus rerum facere. Iure dignissimos molestiae nihil, fugit neque facilis totam non blanditiis consectetur aut alias dolor assumenda error, quam harum. At odio, temporibus quam beatae minima hic consectetur! Voluptatem officia a, earum, rem atque eos? Soluta impedit repudiandae voluptatem aut totam eligendi ea, odit inventore, earum facilis placeat nobis, tenetur sapiente quia perferendis magni, quidem neque ad dolores laborum autem hic omnis! In, dolor blanditiis ut?</p>
-    </div>
-  );
+export default class Wrapper extends React.Component {
+  constructor() {
+    super();
+    console.log('constructor()');
+    this.state = {
+      todos: [],
+      token: ''
+     };
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+  }
+
+  componentDidUpdate() {
+    console.log('componentDidUpdate');
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+  }
+
+  shouldComponentUpdate() {
+    console.log('shouldComponentUpdate');
+    return true;
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log('getSnapshotBeforeUpdate');
+    console.log(prevProps);
+    console.log(prevState);
+    return null;
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log(`getDerivedStateFromProps ${props}`);
+    console.log(`getDerivedStateFromProps ${state}`);
+    return null;
+  }
+
+  getData = () => {
+    axios.get('https://asta-web-1.herokuapp.com/api/todo', {timeout: 2000})
+      .then(data => this.setState({ todos: data.data }))
+      .catch(e => console.log(e));
+  }
+
+  setStorage = () => {
+    localStorage.setItem('test', 1);
+    sessionStorage.setItem('sess', 'asta');
+  }
+
+  login = () => {
+    axios.post('http://localhost:8000/api/login')
+      .then(data => {
+        this.setState({
+          token: data.data.token
+        }, () => console.log( this.state.token ));
+      })
+      .catch(err => console.log(err));
+  }
+
+  render() {
+    console.log('render()');
+    return (
+      <div>
+        <button onClick={this.setStorage}>Set storage</button>
+        <button onClick={this.login}>Login</button>
+        <button onClick={this.getData}>Get data</button>
+        <ul id="list">
+          { this.state.todos.map(el => <li key={el._id}>{el._id}</li>) }
+        </ul>
+      </div>
+    );
+  }
 }
-
-export default Wrapper;
